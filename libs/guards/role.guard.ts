@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
-import { SystemUserRoles } from '../roles/system-user.roles';
+import { SystemUserRolesEnum } from '../enums/system-user-roles.enum';
 import { ROLES, ROLES_FOR_HIMSELF } from '../constants/constants';
 
 @Injectable()
@@ -15,11 +15,12 @@ export class RoleGuard implements CanActivate {
       const rolesForHimself =
         this.reflector.getAllAndOverride<string[]>(ROLES_FOR_HIMSELF, [context.getHandler(), context.getClass()]) ?? [];
       const userRole = req.user.role;
-      if (roles.includes(userRole) || userRole === SystemUserRoles.ADMIN) return true;
+      if (roles.includes(userRole) || userRole === SystemUserRolesEnum.ADMIN) return true;
       if (rolesForHimself.includes(userRole)) {
         req.sameUser = true;
         return true;
       }
+      return false
     } catch {
       return false;
     }

@@ -1,4 +1,4 @@
-import { ClientUserRoles } from '../../../roles/client-user.roles';
+import { ClientUserRolesEnum } from '../../../enums/client-user-roles.enum';
 import { IsDefined, IsIn, IsString, IsUUID } from 'class-validator';
 
 export class ChangeClientUserRole {
@@ -6,8 +6,8 @@ export class ChangeClientUserRole {
   @IsDefined()
   id: string;
 
-  @IsIn(Object.values(ClientUserRoles))
+  @IsIn(Object.values(ClientUserRolesEnum))
   @IsString()
   @IsDefined()
-  role: ClientUserRoles;
+  role: ClientUserRolesEnum;
 }

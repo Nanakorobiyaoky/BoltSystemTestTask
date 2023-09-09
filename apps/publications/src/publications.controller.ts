@@ -35,13 +35,13 @@ export class PublicationsController {
     return this.publicationsService.getPublicationById(id, false);
   }
 
-  @MessagePattern({ cmd: 'updatePublication' })
-  updatePublication(@Payload() data: UpdatePublicationDto): Promise<void> {
-    return this.publicationsService.updatePublication(data);
+  @MessagePattern({ cmd: 'updatePublicationByEditor' })
+  updatePublicationByEditor(@Payload() data: UpdatePublicationDto): Promise<PublicationEntity> {
+    return this.publicationsService.updatePublicationByEditor(data);
   }
 
   @MessagePattern({ cmd: 'updatePublicationByAuthor' })
-  updatePublicationsByAuthor(@Payload() data: { user: any; post: UpdatePublicationDto }): Promise<void> {
+  updatePublicationsByAuthor(@Payload() data: { user: any; post: UpdatePublicationDto }): Promise<PublicationEntity> {
     return this.publicationsService.updatePublicationByAuthor(data);
   }
 

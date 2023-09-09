@@ -5,7 +5,7 @@ import { DataSource, Repository } from 'typeorm';
 import { ClientUserEntity } from '../../../libs/entities/users/client-user.entity';
 import { CreateClientUserDto } from '../../../libs/dto/users/client-users/create-client-user.dto';
 import { ChangeClientUserRole } from '../../../libs/dto/users/client-users/change-client-user-role';
-import { ClientUserRoles } from '../../../libs/roles/client-user.roles';
+import { ClientUserRolesEnum } from '../../../libs/enums/client-user-roles.enum';
 import { CreateSystemUserDto } from '../../../libs/dto/users/system-users/create-system-user.dto';
 import { RpcException } from '@nestjs/microservices';
 import { UpdateClientUserDto } from '../../../libs/dto/users/client-users/update-client-user.dto';
@@ -45,7 +45,7 @@ export class UsersService {
     await queryRunner.startTransaction();
 
     try {
-      if (data.role === ClientUserRoles.EDITOR) {
+      if (data.role === ClientUserRolesEnum.EDITOR) {
         await queryRunner.manager.update(ClientUserEntity, data.id, { ...data, mayPublish: true });
       } else {
         await queryRunner.manager.update(ClientUserEntity, data.id, data);
@@ -82,13 +82,13 @@ export class UsersService {
 
   async getAllClientUsers(): Promise<AllUsersDto> {
     const data: AllUsersDto = {
-      usersAuthors: await this.getClientUsersByRole(ClientUserRoles.AUTHOR),
-      usersEditors: await this.getClientUsersByRole(ClientUserRoles.EDITOR),
+      usersAuthors: await this.getClientUsersByRole(ClientUserRolesEnum.AUTHOR),
+      usersEditors: await this.getClientUsersByRole(ClientUserRolesEnum.EDITOR),
     };
     return data;
   }
 
-  async getClientUsersByRole(role: ClientUserRoles): Promise<ClientUserEntity[]> {
+  async getClientUsersByRole(role: ClientUserRolesEnum): Promise<ClientUserEntity[]> {
     const users = await this.clientUserRepository.find({
       where: {
         role: role,

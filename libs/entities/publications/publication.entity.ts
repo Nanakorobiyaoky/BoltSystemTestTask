@@ -11,7 +11,7 @@ export class PublicationEntity {
   @Column({ type: 'varchar', nullable: false, unique: true })
   content: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', nullable: false, default: '' })
   image: string;
 
   @Column({ type: 'varchar', name: 'author_id', nullable: false })

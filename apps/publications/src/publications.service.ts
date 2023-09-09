@@ -1,12 +1,12 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
-import { PublicationEntity } from '../../../libs/entities/publications/publication.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, In, Repository } from 'typeorm';
-import { CreatePublicationDto } from '../../../libs/dto/publications/create-publication.dto';
-import { RpcException } from '@nestjs/microservices';
-import { UpdatePublicationDto } from '../../../libs/dto/publications/update-publication.dto';
-import { ClientUserEntity } from '../../../libs/entities/users/client-user.entity';
-import { DeletePublicationByAuthorDto } from '../../../libs/dto/publications/delete-publication-by-author.dto';
+import { HttpStatus, Injectable } from "@nestjs/common";
+import { PublicationEntity } from "../../../libs/entities/publications/publication.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { DataSource, In, Repository } from "typeorm";
+import { CreatePublicationDto } from "../../../libs/dto/publications/create-publication.dto";
+import { RpcException } from "@nestjs/microservices";
+import { UpdatePublicationDto } from "../../../libs/dto/publications/update-publication.dto";
+import { ClientUserEntity } from "../../../libs/entities/users/client-user.entity";
+import { DeletePublicationByAuthorDto } from "../../../libs/dto/publications/delete-publication-by-author.dto";
 
 @Injectable()
 export class PublicationsService {
@@ -44,17 +44,24 @@ export class PublicationsService {
     throw new RpcException({ message: 'NOT FOUND', status: HttpStatus.NOT_FOUND });
   }
 
-  async updatePublication(data: UpdatePublicationDto): Promise<void> {
+  async updatePublicationByEditor(data: UpdatePublicationDto): Promise<PublicationEntity> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.startTransaction();
     try {
+      // @ts-ignore
       await queryRunner.manager.update(PublicationEntity, data.id, data);
       await queryRunner.commitTransaction();
-    } catch {
+    } catch (e) {
       await queryRunner.rollbackTransaction();
+      throw new RpcException({message: e.sqlMessage, status: HttpStatus.BAD_REQUEST})
     } finally {
       await queryRunner.release();
     }
+    return await this.publicationsRepository.findOne({
+      where: {
+        id: data.id
+      }
+    })
   }
 
   async deletePublicationById(id: number): Promise<void> {
@@ -86,14 +93,13 @@ export class PublicationsService {
     if (!user.mayPublish && data.isPublished) {
       throw new RpcException({ message: 'you cannot publish', status: HttpStatus.FORBIDDEN });
     }
-    return await this.updatePublication(data);
+    return await this.updatePublicationByEditor(data);
   }
 
   async deletePublicationByAuthor(data: DeletePublicationByAuthorDto) {
     const publication = await this.publicationsRepository.findOne({
       where: {
-        id: data.publicationId,
-        authorId: data.authorId,
+        id: data.publicationId
       },
     });
     if (!publication) {

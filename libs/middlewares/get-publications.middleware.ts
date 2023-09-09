@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
 import { NextFunction } from 'express';
 import { JwtService } from '@nestjs/jwt';
-import { ClientUserRoles } from '../roles/client-user.roles';
+import { ClientUserRolesEnum } from '../enums/client-user-roles.enum';
 import { ONLY_PUBLISHED } from '../constants/constants';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class GetPublicationsMiddleware implements NestMiddleware {
       if (bearer !== 'Bearer' || !token) {
         throw new UnauthorizedException();
       }
-      if (user.role !== ClientUserRoles.AUTHOR) {
+      if (user.role !== ClientUserRolesEnum.AUTHOR) {
         req[ONLY_PUBLISHED] = false;
       }
     }

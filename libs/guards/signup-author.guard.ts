@@ -3,6 +3,8 @@ import { Observable } from 'rxjs';
 import { RoleGuard } from './role.guard';
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
+import { ClientUserEntity } from "../entities/users/client-user.entity";
+import { ClientUserRolesEnum } from "../enums/client-user-roles.enum";
 
 @Injectable()
 export class SignupAuthorGuard extends RoleGuard implements CanActivate {
@@ -22,7 +24,9 @@ export class SignupAuthorGuard extends RoleGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     req.user = this.jwtService.verify(token);
-
+    if (req.user.role === ClientUserRolesEnum.AUTHOR) {
+      return false
+    }
     return super.canActivate(context);
   }
 }

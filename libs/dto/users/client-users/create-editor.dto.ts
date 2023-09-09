@@ -1,7 +1,7 @@
 import { CreateClientUserDto } from './create-client-user.dto';
-import { ClientUserRoles } from '../../../roles/client-user.roles';
+import { ClientUserRolesEnum } from '../../../enums/client-user-roles.enum';
 
 export class CreateEditorDto extends CreateClientUserDto {
-  role: ClientUserRoles;
+  role: ClientUserRolesEnum;
   mayPublish?: boolean;
 }

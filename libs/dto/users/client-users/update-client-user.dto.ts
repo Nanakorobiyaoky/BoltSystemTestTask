@@ -1,4 +1,4 @@
-import { IsDefined, IsEmail, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsDefined, IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID, Length } from "class-validator";
 
 export class UpdateClientUserDto {
   @IsUUID()
@@ -9,10 +9,12 @@ export class UpdateClientUserDto {
   @IsOptional()
   email?: string;
 
+  @Length(8)
   @IsString()
   @IsOptional()
   password?: string;
 
+  @IsNotEmpty()
   @IsString()
   @IsOptional()
   fullName?: string;
