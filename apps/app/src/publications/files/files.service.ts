@@ -6,20 +6,16 @@ import { ImageExtensionsEnum } from '../../../../../libs/enums/image-extensions.
 
 @Injectable()
 export class FilesService {
+  staticFilepath = path.resolve(__dirname, '..', 'static');
 
-  staticFilepath = path.resolve(__dirname, '..', 'static')
-
-  async saveImage(image, filename): Promise<string> {
-
+  async saveImage(image, filename): Promise<void> {
     try {
       if (!fs.existsSync(this.staticFilepath)) {
         fs.mkdirSync(this.staticFilepath, { recursive: true });
       }
       await fs.writeFile(path.join(this.staticFilepath, filename), image.buffer, (err) => {
-        console.error(err)
-        // if (err) throw err;
+        if (err) console.error(err);
       });
-      return filename;
     } catch (err) {
       throw new InternalServerErrorException('error while writing file');
     }
@@ -37,8 +33,8 @@ export class FilesService {
   deleteImage(filename: string): void {
     fs.unlink(path.join(this.staticFilepath, filename), (err) => {
       if (err) {
-        console.error(err)
+        console.error(err);
       }
-    })
+    });
   }
 }

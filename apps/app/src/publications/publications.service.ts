@@ -49,25 +49,25 @@ export class PublicationsService {
   }
 
   async updatePublicationByAuthor(publicationData, req) {
-    let imageName
+    let imageName;
     if (publicationData.image === '') {
       // @ts-ignore
-      const publication = await this.getPublicationById(publicationData.id)
-      imageName = publication.image
+      const publication = await this.getPublicationById(publicationData.id);
+      imageName = publication.image;
     }
     const pattern = { cmd: 'updatePublicationByAuthor' };
     const result = await this.sendMessage(pattern, { post: publicationData, user: req['user'] });
     if (result && imageName) {
-      await this.filesService.deleteImage(imageName)
+      await this.filesService.deleteImage(imageName);
     }
-    return result
+    return result;
   }
 
   async updatePublicationByEditor(publicationData) {
     if (publicationData.image === '') {
       // @ts-ignore
-      const publication = await this.getPublicationById(publicationData.id)
-      await this.filesService.deleteImage(publication.image)
+      const publication = await this.getPublicationById(publicationData.id);
+      await this.filesService.deleteImage(publication.image);
     }
 
     const pattern = { cmd: 'updatePublicationByEditor' };
@@ -84,9 +84,9 @@ export class PublicationsService {
 
     let result;
     if (req.hasOwnProperty('sameUser')) {
-      result = await this.updatePublicationByAuthor(publicationData, req)
+      result = await this.updatePublicationByAuthor(publicationData, req);
     } else {
-      result = await this.updatePublicationByEditor(publicationData)
+      result = await this.updatePublicationByEditor(publicationData);
     }
     if (image) {
       try {

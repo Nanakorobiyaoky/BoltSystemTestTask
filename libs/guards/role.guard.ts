@@ -20,7 +20,7 @@ export class RoleGuard implements CanActivate {
         req.sameUser = true;
         return true;
       }
-      return false
+      return false;
     } catch {
       return false;
     }

@@ -36,8 +36,12 @@ export class UsersService {
   }
 
   async saveUser(data: CreateClientUserDto): Promise<ClientUserEntity> {
-    const savedUser = await this.clientUserRepository.save(data);
-    return savedUser;
+    try {
+      const savedUser = await this.clientUserRepository.save(data);
+      return savedUser;
+    } catch {
+      throw new RpcException({ message: 'User with this email already exists', status: HttpStatus.BAD_REQUEST });
+    }
   }
 
   async changeUserRole(data: ChangeClientUserRole): Promise<void> {
@@ -63,7 +67,7 @@ export class UsersService {
       const savedUser = await this.systemUserRepository.save(data);
       return savedUser;
     } catch {
-      throw new RpcException({ message: 'System user with this name already exists', status: HttpStatus.BAD_REQUEST });
+      throw new RpcException({ message: 'System user with this email/name already exists', status: HttpStatus.BAD_REQUEST });
     }
   }
 

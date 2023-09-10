@@ -1,12 +1,12 @@
-import { HttpStatus, Injectable } from "@nestjs/common";
-import { PublicationEntity } from "../../../libs/entities/publications/publication.entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import { DataSource, In, Repository } from "typeorm";
-import { CreatePublicationDto } from "../../../libs/dto/publications/create-publication.dto";
-import { RpcException } from "@nestjs/microservices";
-import { UpdatePublicationDto } from "../../../libs/dto/publications/update-publication.dto";
-import { ClientUserEntity } from "../../../libs/entities/users/client-user.entity";
-import { DeletePublicationByAuthorDto } from "../../../libs/dto/publications/delete-publication-by-author.dto";
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { PublicationEntity } from '../../../libs/entities/publications/publication.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource, In, Repository } from 'typeorm';
+import { CreatePublicationDto } from '../../../libs/dto/publications/create-publication.dto';
+import { RpcException } from '@nestjs/microservices';
+import { UpdatePublicationDto } from '../../../libs/dto/publications/update-publication.dto';
+import { ClientUserEntity } from '../../../libs/entities/users/client-user.entity';
+import { DeletePublicationByAuthorDto } from '../../../libs/dto/publications/delete-publication-by-author.dto';
 
 @Injectable()
 export class PublicationsService {
@@ -53,15 +53,15 @@ export class PublicationsService {
       await queryRunner.commitTransaction();
     } catch (e) {
       await queryRunner.rollbackTransaction();
-      throw new RpcException({message: e.sqlMessage, status: HttpStatus.BAD_REQUEST})
+      throw new RpcException({ message: e.sqlMessage, status: HttpStatus.BAD_REQUEST });
     } finally {
       await queryRunner.release();
     }
     return await this.publicationsRepository.findOne({
       where: {
-        id: data.id
-      }
-    })
+        id: data.id,
+      },
+    });
   }
 
   async deletePublicationById(id: number): Promise<void> {
@@ -99,7 +99,7 @@ export class PublicationsService {
   async deletePublicationByAuthor(data: DeletePublicationByAuthorDto) {
     const publication = await this.publicationsRepository.findOne({
       where: {
-        id: data.publicationId
+        id: data.publicationId,
       },
     });
     if (!publication) {

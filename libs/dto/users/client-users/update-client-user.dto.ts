@@ -1,4 +1,4 @@
-import { IsDefined, IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID, Length } from "class-validator";
+import { IsDefined, IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID, Length } from 'class-validator';
 
 export class UpdateClientUserDto {
   @IsUUID()
