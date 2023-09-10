@@ -1,9 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from "@nestjs/typeorm";
-import { PublicationsService } from "./publications.service";
-import { PublicationEntity } from "../../../libs/entities/publications/publication.entity";
-import { PublicationsModule } from "./publications.module";
-
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { PublicationsService } from './publications.service';
+import { PublicationEntity } from '../../../libs/entities/publications/publication.entity';
+import { PublicationsModule } from './publications.module';
 
 describe('PublicationsService', () => {
   let publicationsService: PublicationsService;
@@ -20,13 +19,12 @@ describe('PublicationsService', () => {
             find: jest.fn(),
             save: jest.fn(),
             findOne: jest.fn(),
-          }
+          },
         },
       ],
     }).compile();
 
     publicationsService = module.get<PublicationsService>(PublicationsService);
-
   });
 
   afterEach(() => {
@@ -36,6 +34,4 @@ describe('PublicationsService', () => {
   it('should be defined', () => {
     expect(publicationsService).toBeDefined();
   });
-
-
 });

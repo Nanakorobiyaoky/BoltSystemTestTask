@@ -67,7 +67,10 @@ export class UsersService {
       const savedUser = await this.systemUserRepository.save(data);
       return savedUser;
     } catch {
-      throw new RpcException({ message: 'System user with this email/name already exists', status: HttpStatus.BAD_REQUEST });
+      throw new RpcException({
+        message: 'System user with this email/name already exists',
+        status: HttpStatus.BAD_REQUEST,
+      });
     }
   }
 
