@@ -1,73 +1,84 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## Описание
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Тестовое задание
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Установка пакетов
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
+```
+npm install
 ```
 
-## Running the app
+## Базы данных
 
-```bash
-# development
-$ npm run start
+```
+Отредактируйте файл .production.env и .development.env в соответствии с вашей конфигурацией MySQL;
 
-# watch mode
-$ npm run start:dev
+Подключитесь к вашему серверу MySQL и создайте необходимы базы данных при помощи следующих команд:
+- mysql -u root -p
+- password
+- create database publications;
+- create database users;
+- \q
 
-# production mode
-$ npm run start:prod
+где {root} - имя пользователя, а {password} - пароль
+
+Проверьте созданы ли базы данных:
+- mysql -u root -p
+- password
+- show databases;
+- \q
+
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| publications       | <===
+| sys                |
+| users              | <===
++--------------------+
+
+Затем запустите следующие скрипты:
+- npm run publications:migrate
+- npm run users:migrate
+
+При выполнении этих команд буду созданы необходимые таблицы, а так же несколько пользователей:
+админ:
+    "email": "admin",
+    "password": "admin",
+редактор:
+    "email": "editor@gmail.com"
+    "password": "editor@gmail.com"
+автор:
+    "email": "author@gmail.com",
+    "password": "author@gmail.com",
 ```
 
-## Test
+## Старт приложения
 
-```bash
-# unit tests
-$ npm run test
+```
+Для запуска приложение введите следующие команды:
+-npm run start
+-npm run start auth
+-npm run start publications
+-npm run start users
 
-# e2e tests
-$ npm run test:e2e
+Каждая команда должна быть запущена в отдельном окне терминала;
+Приложение принимает запросы по адресу: localhost:5000;
+Порт можно изменить в файлах конфигшурации
 
-# test coverage
-$ npm run test:cov
+Для запуска приложения в режиме разработчика введите следующие команды:
+-npm run start:dev
+-npm run start:dev auth
+-npm run start:dev publications
+-npm run start:dev users
 ```
 
-## Support
+## Тесты
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+Для запуска модульных тестов выполните команду:
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+npm run test
+```
