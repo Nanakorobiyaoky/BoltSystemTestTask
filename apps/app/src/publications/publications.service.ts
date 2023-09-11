@@ -114,7 +114,7 @@ export class PublicationsService {
 
   async getAllPublications(req: Request) {
     const pattern = { cmd: 'getAllPublications', onlyPublished: req[ONLY_PUBLISHED] };
-    return await this.sendMessage(pattern, req.body['authorId']);
+    return await this.sendMessage(pattern, req.body['authorId'] ?? '');
   }
 
   async deletePublicationById(id: number, req: Request) {

@@ -19,20 +19,11 @@ export class PublicationsService {
 
   async getAllPublications(authorId, onlyPublished: boolean): Promise<PublicationEntity[]> {
     const result = await this.publicationsRepository.find({
-      where: {
-        isPublished: onlyPublished ? true : In([true, false]),
-      },
+      where: [
+        { isPublished: onlyPublished ? true : In([true, false]) },
+        { isPublished: false, authorId: authorId }
+      ],
     });
-    if (onlyPublished) {
-      return result.concat(
-        await this.publicationsRepository.find({
-          where: {
-            isPublished: false,
-            authorId: authorId,
-          },
-        }),
-      );
-    }
     return result;
   }
 
