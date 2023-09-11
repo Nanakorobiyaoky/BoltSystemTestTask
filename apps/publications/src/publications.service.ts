@@ -7,6 +7,7 @@ import { RpcException } from '@nestjs/microservices';
 import { UpdatePublicationDto } from '../../../libs/dto/publications/update-publication.dto';
 import { ClientUserEntity } from '../../../libs/entities/users/client-user.entity';
 import { DeletePublicationByAuthorDto } from '../../../libs/dto/publications/delete-publication-by-author.dto';
+import { GetPublicationsDto } from '../../../libs/dto/publications/get-publications.dto';
 
 @Injectable()
 export class PublicationsService {
@@ -16,12 +17,23 @@ export class PublicationsService {
     private dataSource: DataSource,
   ) {}
 
-  async getAllPublications(onlyPublished: boolean): Promise<PublicationEntity[]> {
-    return await this.publicationsRepository.find({
+  async getAllPublications(authorId, onlyPublished: boolean): Promise<PublicationEntity[]> {
+    const result = await this.publicationsRepository.find({
       where: {
         isPublished: onlyPublished ? true : In([true, false]),
       },
     });
+    if (onlyPublished) {
+      return result.concat(
+        await this.publicationsRepository.find({
+          where: {
+            isPublished: false,
+            authorId: authorId,
+          },
+        }),
+      );
+    }
+    return result;
   }
 
   async createPublication(data: CreatePublicationDto): Promise<PublicationEntity> {
@@ -32,14 +44,19 @@ export class PublicationsService {
     }
   }
 
-  async getPublicationById(id: number, onlyPublished: boolean): Promise<PublicationEntity> {
+  async getPublicationById(data: GetPublicationsDto, onlyPublished: boolean): Promise<PublicationEntity> {
     const result = await this.publicationsRepository.findOne({
       where: {
-        id: id,
+        id: data.publicationId,
       },
     });
     if (result) {
-      if ((result.isPublished && onlyPublished) || !onlyPublished) return result;
+      if (data.authorId === result.authorId) {
+        return result;
+      }
+      if ((result.isPublished && onlyPublished) || !onlyPublished) {
+        return result;
+      }
     }
     throw new RpcException({ message: 'NOT FOUND', status: HttpStatus.NOT_FOUND });
   }

@@ -14,6 +14,7 @@ export class GetPublicationsMiddleware implements NestMiddleware {
     if (auth) {
       const [bearer, token] = auth.split(' ');
       const user = this.jwtService.verify(token);
+      req['user'] = user;
       if (bearer !== 'Bearer' || !token) {
         throw new UnauthorizedException();
       }

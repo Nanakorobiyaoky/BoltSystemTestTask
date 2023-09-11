@@ -6,6 +6,7 @@ import { FilesService } from './files/files.service';
 import { UpdatePublicationDto } from '../../../../libs/dto/publications/update-publication.dto';
 import { ONLY_PUBLISHED } from '../../../../libs/constants/constants';
 import { DeletePublicationByAuthorDto } from '../../../../libs/dto/publications/delete-publication-by-author.dto';
+import { GetPublicationsDto } from '../../../../libs/dto/publications/get-publications.dto';
 
 @Injectable()
 export class PublicationsService {
@@ -100,13 +101,22 @@ export class PublicationsService {
     return result;
   }
   async getPublicationById(id: number, req: Request) {
-    const pattern = { cmd: 'getPublicationById', onlyPublished: req ? req[ONLY_PUBLISHED] : false };
-    return await this.sendMessage(pattern, id);
+    const onlyPublished = req ? req[ONLY_PUBLISHED] : false;
+    const pattern = { cmd: 'getPublicationById', onlyPublished: onlyPublished };
+    const data: GetPublicationsDto = {
+      publicationId: id,
+    };
+    if (onlyPublished) {
+      data.authorId = req.body['authorId'];
+    }
+    return await this.sendMessage(pattern, data);
   }
+
   async getAllPublications(req: Request) {
     const pattern = { cmd: 'getAllPublications', onlyPublished: req[ONLY_PUBLISHED] };
-    return await this.sendMessage(pattern, {});
+    return await this.sendMessage(pattern, req.body['authorId']);
   }
+
   async deletePublicationById(id: number, req: Request) {
     if (req.hasOwnProperty('sameUser')) {
       const pattern = { cmd: 'deletePublicationByAuthor' };

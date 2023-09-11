@@ -5,19 +5,20 @@ import { PublicationEntity } from '../../../libs/entities/publications/publicati
 import { CreatePublicationDto } from '../../../libs/dto/publications/create-publication.dto';
 import { UpdatePublicationDto } from '../../../libs/dto/publications/update-publication.dto';
 import { DeletePublicationByAuthorDto } from '../../../libs/dto/publications/delete-publication-by-author.dto';
+import { GetPublicationsDto } from '../../../libs/dto/publications/get-publications.dto';
 
 @Controller()
 export class PublicationsController {
   constructor(private readonly publicationsService: PublicationsService) {}
 
   @MessagePattern({ cmd: 'getAllPublications', onlyPublished: true })
-  getAllPublishedPublications(): Promise<PublicationEntity[]> {
-    return this.publicationsService.getAllPublications(true);
+  getAllPublishedPublications(@Payload() authorId: string): Promise<PublicationEntity[]> {
+    return this.publicationsService.getAllPublications(authorId, true);
   }
 
   @MessagePattern({ cmd: 'getAllPublications', onlyPublished: false })
-  getAllPublications(): Promise<PublicationEntity[]> {
-    return this.publicationsService.getAllPublications(false);
+  getAllPublications(@Payload() authorId: string): Promise<PublicationEntity[]> {
+    return this.publicationsService.getAllPublications(authorId, false);
   }
 
   @MessagePattern({ cmd: 'createPublication' })
@@ -26,13 +27,13 @@ export class PublicationsController {
   }
 
   @MessagePattern({ cmd: 'getPublicationById', onlyPublished: true })
-  getPublishedPublicationById(@Payload() id: number): Promise<PublicationEntity> {
-    return this.publicationsService.getPublicationById(id, true);
+  getPublishedPublicationById(@Payload() data: GetPublicationsDto): Promise<PublicationEntity> {
+    return this.publicationsService.getPublicationById(data, true);
   }
 
   @MessagePattern({ cmd: 'getPublicationById', onlyPublished: false })
-  getPublicationById(@Payload() id: number): Promise<PublicationEntity> {
-    return this.publicationsService.getPublicationById(id, false);
+  getPublicationById(@Payload() data: GetPublicationsDto): Promise<PublicationEntity> {
+    return this.publicationsService.getPublicationById(data, false);
   }
 
   @MessagePattern({ cmd: 'updatePublicationByEditor' })
